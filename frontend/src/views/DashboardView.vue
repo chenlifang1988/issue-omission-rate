@@ -42,6 +42,12 @@ const activeProject = computed(() => {
   return filters.value.module;
 });
 
+const projectScopeLabel = computed(() => {
+  if (filters.value.module === NONE_PROJECT) return UNSPECIFIED_PROJECT;
+  if (filters.value.module) return filters.value.module;
+  return '全部项目';
+});
+
 function currentFilters() {
   return {
     startDate: filters.value.startDate || undefined,
@@ -126,6 +132,7 @@ function selectProject(project: string) {
   } else {
     filters.value.module = project;
   }
+  showMissed.value = true;
   load();
 }
 
@@ -301,11 +308,14 @@ onBeforeUnmount(() => {
 
   <div v-if="showMissed" class="panel">
     <div class="panel-head">
-      <h2>客户端未测出问题类型 B（{{ missedTypes.length }} 类 / {{ missedTypeRecords }} 条记录）</h2>
+      <h2>
+        客户端未测出问题类型 B · {{ projectScopeLabel }}（{{ missedTypes.length }} 类 /
+        {{ missedTypeRecords }} 条记录）
+      </h2>
       <button @click="showMissed = false">收起</button>
     </div>
     <p class="hint">
-      以下问题类型在客户端出现过，但测试验证未测出，是遗漏的主要来源；可直接填写原因定位与改进措施，失焦即保存。
+      以下问题类型在「{{ projectScopeLabel }}」的客户端出现过，但测试验证未测出，是遗漏的主要来源；可直接填写原因定位与改进措施，失焦即保存。
     </p>
     <table>
       <thead>
@@ -385,9 +395,9 @@ onBeforeUnmount(() => {
           :class="{ active: activeProject === item.project }"
           @click="selectProject(item.project)"
         >
-          <td @click.stop>
+          <td>
             <template v-if="editingProject === item.project">
-              <div class="rename-box">
+              <div class="rename-box" @click.stop>
                 <input
                   v-model="editingName"
                   class="rename-input"
