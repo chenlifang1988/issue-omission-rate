@@ -48,4 +48,13 @@ Entries discovered by the Agent during task execution should follow this format:
 - Instructions:
   - SQLite 数据库默认位于 `backend/data/omission.db`，可用环境变量 `DB_DIR` / `DB_PATH` 覆盖。
   - 字典为空时后端启动会写入默认分类（定义见 `backend/src/services/dictionary.js`）；重建字典（清空字典与问题数据）：`cd backend && node scripts/init-dictionary.js --reset`。
-  - 前端通过 Vite 代理把 `/api` 转发到 `http://localhost:3001`。
+   - 前端通过 Vite 代理把 `/api` 转发到 `http://localhost:3001`。
+
+[Project Knowledge Summary]
+- Date: 2026-09-29
+- Context: Discovered by Agent while pushing to GitHub
+- Category: Operations & Deployment
+- Instructions:
+  - 代码托管远端：`https://github.com/chenlifang1988/issue-omission-rate`（Public），默认分支 `main`，本地已设 `main -> origin/main` upstream。
+  - 推送：`git push origin main`（HTTPS，需要具备 `repo` 权限的 GitHub Token；环境默认无持久凭据）。
+  - 仓库已忽略 `node_modules/` 与 `backend/data/`（运行时 SQLite 不入库）。
